@@ -21,3 +21,18 @@ variable "name" {
   description = "The name of this resource"
   default     = "tst"
 }
+
+variable "azdo_org_guid" {
+  type        = string
+  description = "The guid of the org"
+}
+
+variable "azdo_org_name" {
+  type        = string
+  description = "The org name"
+}
+
+variable "azdo_project_name" {
+  type        = string
+  description = "The project name"
+}
