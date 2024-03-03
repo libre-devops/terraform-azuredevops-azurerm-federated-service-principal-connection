@@ -5,6 +5,10 @@ terraform {
       source = "hashicorp/azurerm"
     }
 
+    azuredevops = {
+      source = "microsoft/azuredevops"
+    }
+
     random = {
       source = "hashicorp/random"
     }
