@@ -1,6 +1,6 @@
 output "service_endpoint_id" {
   description = "The id of the service endpoint"
-  value  = azuredevops_serviceendpoint_azurerm.azure_devops_service_endpoint_azurerm.id
+  value       = azuredevops_serviceendpoint_azurerm.azure_devops_service_endpoint_azurerm.id
 }
 
 output "service_endpoint_name" {

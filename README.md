@@ -7,10 +7,16 @@ data "azuredevops_project" "project_id" {
   name = var.azuredevops_project_name
 }
 
+locals {
+  default_service_principal_name            = var.service_principal_name != null ? var.service_principal_name : "spn-azdo-${var.azuredevops_project_name}-${var.azuredevops_organization_guid}"
+  default_service_principal_description     = var.service_principal_description != null ? var.service_principal_description : "This service principal is for the federated credential of Azure DevOps of the project ${var.azuredevops_project_name}, in the organization ${var.azuredevops_organization_name} with guid ${var.azuredevops_organization_guid}"
+  default_federated_credential_display_name = var.federated_credential_display_name != null ? var.federated_credential_display_name : "oidc-wlfid-${local.default_service_principal_name}"
+}
+
 resource "azuredevops_serviceendpoint_azurerm" "azure_devops_service_endpoint_azurerm" {
   depends_on                             = [azurerm_role_assignment.assign_spn_to_subscription[0]]
   project_id                             = data.azuredevops_project.project_id.id
-  service_endpoint_name                  = var.service_principal_name != null ? var.service_principal_name : "spn-azdo-${var.azuredevops_project_name}-${var.azuredevops_organization_guid}"
+  service_endpoint_name                  = var.service_principal_name != null ? var.service_principal_name : local.default_service_principal_name
   description                            = var.service_principal_description
   service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
 
@@ -28,12 +34,12 @@ module "service_principal" {
 
   spns = [
     {
-      spn_name                            = var.service_principal_name != null ? var.service_principal_name : "spn-azdo-${var.azuredevops_project_name}-${var.azuredevops_organization_guid}"
-      description                         = var.service_principal_description
+      spn_name                            = var.service_principal_name != null ? var.service_principal_name : local.default_service_principal_name
+      description                         = local.default_service_principal_description
       create_corresponding_enterprise_app = true
       create_federated_credential         = true
-      federated_credential_display_name   = var.service_principal_name != null ? var.service_principal_name : "oidc-wlfid-spn-azdo-${var.azuredevops_project_name}-${var.azuredevops_organization_guid}"
-      federated_credential_description    = var.service_principal_description
+      federated_credential_display_name   = local.default_federated_credential_display_name
+      federated_credential_description    = var.service_principal_description != null ? var.service_principal_description : local.default_federated_credential_display_name
       federated_credential_audiences      = var.federated_credential_audiences
       federated_credential_issuer         = format("https://vstoken.dev.azure.com/%s", var.azuredevops_organization_guid)
       federated_credential_subject        = format("sc://%s/%s/%s", var.azuredevops_organization_name, var.azuredevops_project_name, var.service_principal_name != null ? var.service_principal_name : "spn-azdo-${var.azuredevops_project_name}-${var.azuredevops_organization_guid}")
@@ -43,7 +49,7 @@ module "service_principal" {
 
 resource "azurerm_role_assignment" "assign_spn_to_subscription" {
   count                = var.attempt_assign_role_to_spn == true ? 1 : 0
-  principal_id         = module.service_principal.object_id["0"]
+  principal_id         = module.service_principal.enterprise_app_object_id["0"]
   scope                = data.azurerm_subscription.current.id
   role_definition_name = var.role_definition_name_to_assign
 }
@@ -86,15 +92,16 @@ resource "azurerm_role_assignment" "assign_spn_to_subscription" {
 | <a name="input_azuredevops_organization_name"></a> [azuredevops\_organization\_name](#input\_azuredevops\_organization\_name) | The name of your Azure DevOps organization | `string` | n/a | yes |
 | <a name="input_azuredevops_project_name"></a> [azuredevops\_project\_name](#input\_azuredevops\_project\_name) | The name of your Azure DevOps project you want to configure the federated cred for | `string` | n/a | yes |
 | <a name="input_federated_credential_audiences"></a> [federated\_credential\_audiences](#input\_federated\_credential\_audiences) | The audience for the credential, set to the default for Azure DevOps | `list(string)` | <pre>[<br>  "api://AzureADTokenExchange"<br>]</pre> | no |
+| <a name="input_federated_credential_display_name"></a> [federated\_credential\_display\_name](#input\_federated\_credential\_display\_name) | The display name of your federated credential in AzureAD/Entra for ID | `string` | `null` | no |
 | <a name="input_role_definition_name_to_assign"></a> [role\_definition\_name\_to\_assign](#input\_role\_definition\_name\_to\_assign) | The role definition needed to setup SPN, for security reasons, defautls to Reader | `string` | `"Reader"` | no |
-| <a name="input_service_principal_description"></a> [service\_principal\_description](#input\_service\_principal\_description) | The description of the service principal | `string` | `"This service principal is for the federated credential of Azure DevOps"` | no |
+| <a name="input_service_principal_description"></a> [service\_principal\_description](#input\_service\_principal\_description) | The description of the service principal | `string` | `null` | no |
 | <a name="input_service_principal_name"></a> [service\_principal\_name](#input\_service\_principal\_name) | The name of the service principal | `string` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | n/a |
+| <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | The id of the service endpoint |
 | <a name="output_service_endpoint_name"></a> [service\_endpoint\_name](#output\_service\_endpoint\_name) | The project name of the service endpoint is made with |
 | <a name="output_service_endpoint_project_id"></a> [service\_endpoint\_project\_id](#output\_service\_endpoint\_project\_id) | The project id of the service endpoint is made with |
 | <a name="output_service_endpoint_service_principal_id"></a> [service\_endpoint\_service\_principal\_id](#output\_service\_endpoint\_service\_principal\_id) | The service principal id service endpoint is made with |

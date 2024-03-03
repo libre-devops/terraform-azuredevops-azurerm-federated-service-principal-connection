@@ -25,6 +25,12 @@ variable "federated_credential_audiences" {
   default     = ["api://AzureADTokenExchange"]
 }
 
+variable "federated_credential_display_name" {
+  type        = string
+  description = "The display name of your federated credential in AzureAD/Entra for ID"
+  default     = null
+}
+
 variable "role_definition_name_to_assign" {
   type        = string
   description = "The role definition needed to setup SPN, for security reasons, defautls to Reader"
@@ -34,7 +40,7 @@ variable "role_definition_name_to_assign" {
 variable "service_principal_description" {
   type        = string
   description = "The description of the service principal"
-  default     = "This service principal is for the federated credential of Azure DevOps"
+  default     = null
 }
 
 variable "service_principal_name" {
