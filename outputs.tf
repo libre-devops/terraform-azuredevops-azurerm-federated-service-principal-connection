@@ -1,5 +1,5 @@
 output "service_endpoint_id" {
-  output = "The id of the service endpoint"
+  description = "The id of the service endpoint"
   value  = azuredevops_serviceendpoint_azurerm.azure_devops_service_endpoint_azurerm.id
 }
 
