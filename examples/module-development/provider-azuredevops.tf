@@ -1,3 +1,1 @@
-provider "azuredevops" {
-  use_oidc = true
-}
+provider "azuredevops" {}
