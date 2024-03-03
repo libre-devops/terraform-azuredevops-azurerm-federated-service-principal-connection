@@ -92,4 +92,10 @@ No requirements.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_service_principal_outputs"></a> [service\_principal\_outputs](#output\_service\_principal\_outputs) | n/a |
+| <a name="output_service_endpoint_id"></a> [service\_endpoint\_id](#output\_service\_endpoint\_id) | n/a |
+| <a name="output_service_endpoint_name"></a> [service\_endpoint\_name](#output\_service\_endpoint\_name) | The project name of the service endpoint is made with |
+| <a name="output_service_endpoint_project_id"></a> [service\_endpoint\_project\_id](#output\_service\_endpoint\_project\_id) | The project id of the service endpoint is made with |
+| <a name="output_service_endpoint_service_principal_id"></a> [service\_endpoint\_service\_principal\_id](#output\_service\_endpoint\_service\_principal\_id) | The service principal id service endpoint is made with |
+| <a name="output_service_principal_outputs"></a> [service\_principal\_outputs](#output\_service\_principal\_outputs) | The outputs from the service principle |
+| <a name="output_workload_identity_federation_issuer"></a> [workload\_identity\_federation\_issuer](#output\_workload\_identity\_federation\_issuer) | The issuer for the workload issuer |
+| <a name="output_workload_identity_federation_subject"></a> [workload\_identity\_federation\_subject](#output\_workload\_identity\_federation\_subject) | The subject for the workload federation |
