@@ -1,5 +1,4 @@
 #(./Get-AzureDevOpsOrg.ps1 -OrganizationName $Env:AZP_PROJECT -Pat $Env:AZP_TOKEN).OrganizationId
-#4a23d149-8cee-4643-a57b-3b3db30e54ce
 
 param (
     [Parameter(Mandatory)]
