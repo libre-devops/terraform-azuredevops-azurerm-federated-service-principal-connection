@@ -50,13 +50,15 @@ resource "azurerm_role_assignment" "assign_spn_to_subscription" {
 ```
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_azuredevops"></a> [azuredevops](#requirement\_azuredevops) | ~>0.11.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | n/a |
+| <a name="provider_azuredevops"></a> [azuredevops](#provider\_azuredevops) | ~>0.11.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | n/a |
 
 ## Modules
